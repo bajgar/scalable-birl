@@ -1,8 +1,7 @@
 import jax.numpy as np
 from jax import grad, jit, vmap, value_and_grad
 from jax import random
-from jax.ops import index, index_add, index_update
-from jax.experimental import optimizers
+from jax.example_libraries import optimizers
 import jax
 import haiku as hk
 
