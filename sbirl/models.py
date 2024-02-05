@@ -24,13 +24,13 @@ def encoder_model(inputs, layers=2, units=64, state_only=True, a_dim=None):
     out_dim = 2
     if not state_only:
         out_dim = a_dim * 2
-    mlp = hk.Sequential(hidden_layers(layers) + [hk.Linear(out_dim)])
+    mlp = hk.Sequential(hidden_layers(layers, units) + [hk.Linear(out_dim)])
     return mlp(inputs)
 
 
 def q_network_model(inputs, a_dim, layers=2, units=64):
 
-    mlp = hk.Sequential(hidden_layers(layers) + [hk.Linear(a_dim)])
+    mlp = hk.Sequential(hidden_layers(layers, units) + [hk.Linear(a_dim)])
     return mlp(inputs)
 
 
