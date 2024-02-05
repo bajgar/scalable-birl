@@ -296,10 +296,10 @@ class avril:
         results = []
         env = gym.make(env_test)
         for t in tqdm(range(test_evals), desc="Testing"):
-            observation = env.reset()
-            done = False
+            observation, info = env.reset()
+            done = truncated = False
             rewards = []
-            while not done:
+            while not (done or truncated):
                 logit = self.q_network.apply(
                     self.q_params,
                     self.key,
@@ -309,7 +309,7 @@ class avril:
                     self.decoder_units,
                 )
                 action = jax.nn.softmax(logit).argmax()
-                observation, reward, done, info = env.step(int(action))
+                observation, reward, done, truncated, info = env.step(int(action))
                 rewards.append(reward)
 
             results.append(sum(rewards))
@@ -342,11 +342,11 @@ class avril:
         env = gym.make(env_test)
 
         observation = env.reset()
-        done = False
+        done = truncated = False
         rewards = []
-        frames = [] 
+        frames = []
         i=0
-        while not done:
+        while not (done or truncated):
             if i % subsample ==0:
                 frames.append(env.render(mode = 'rgb_array'))
             logit = self.q_network.apply(
@@ -358,7 +358,7 @@ class avril:
                 self.decoder_units,
             )
             action = jax.nn.softmax(logit).argmax()
-            observation, reward, done, info = env.step(int(action))
+            observation, reward, done, truncated, info = env.step(int(action))
             rewards.append(reward)
             i += 1
 
